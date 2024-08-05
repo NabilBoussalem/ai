@@ -3,7 +3,7 @@ from typing import Generator
 from groq import Groq
 
 client = Groq(
-    api_key="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",
+    api_key=st.secrets["api"],
 )
 
 
