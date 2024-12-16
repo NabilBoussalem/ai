@@ -4,7 +4,25 @@ from groq import Groq
 import requests
 import os
 
-api_key = os.environ.get("GROQ_API_KEY")
+# Set page configuration
+st.set_page_config(page_icon="💬", layout="wide", page_title="Groq Goes Brrrrrrrr...")
+
+def icon(emoji: str):
+    """Shows an emoji as a Notion-style page icon."""
+    st.write(f'<span style="font-size: 78px; line-height: 1">{emoji}</span>', unsafe_allow_html=True)
+
+
+st.subheader("Groq Chat Streamlit App", divider="rainbow", anchor=False)
+
+# Input for API key
+api_key = st.text_input("Enter your Groq API Key:", type="password")
+if not api_key:
+    st.warning("Please enter your Groq API key.")
+    st.stop()
+
+# Initialize Groq client
+client = Groq(api_key=api_key)
+
 url = "https://api.groq.com/openai/v1/models"
 
 headers = {
@@ -32,25 +50,6 @@ for model in models_data['data']:
         "tokens": tokens,
         "developer": developer
     }
-
-# Set page configuration
-st.set_page_config(page_icon="💬", layout="wide", page_title="Groq Goes Brrrrrrrr...")
-
-def icon(emoji: str):
-    """Shows an emoji as a Notion-style page icon."""
-    st.write(f'<span style="font-size: 78px; line-height: 1">{emoji}</span>', unsafe_allow_html=True)
-
-
-st.subheader("Groq Chat Streamlit App", divider="rainbow", anchor=False)
-
-# Input for API key
-api_key = st.text_input("Enter your Groq API Key:", type="password")
-if not api_key:
-    st.warning("Please enter your Groq API key.")
-    st.stop()
-
-# Initialize Groq client
-client = Groq(api_key=api_key)
 
 # Initialize chat history and selected model
 if "messages" not in st.session_state:
