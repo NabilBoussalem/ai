@@ -20,7 +20,7 @@ models_data = response.json()
 
 # Build the desired dictionary
 models = {}
-for model in models_data:
+for model in models_data['data']:
     model_id = model["id"]
     name = model_id  # Default name is the ID
     tokens = model.get("context_window", 8192)  # Default context window to 8192 if not provided
