@@ -15,6 +15,7 @@ headers = {
 # Make the API request
 response = requests.get(url, headers=headers)
 
+response.raise_for_status()
 # Extract the JSON response
 models_data = response.json()
 # Build the desired dictionary
