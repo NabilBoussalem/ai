@@ -17,7 +17,6 @@ response = requests.get(url, headers=headers)
 
 # Extract the JSON response
 models_data = response.json()
-
 # Build the desired dictionary
 models = {}
 for model in models_data['data']:
@@ -82,7 +81,7 @@ with col2:
     # Adjust max_tokens slider dynamically based on the selected model
     max_tokens = st.slider(
         "Max Tokens:",
-        min_value=512,  # Minimum value to allow some flexibility
+        min_value=256,  # Minimum value to allow some flexibility
         max_value=max_tokens_range,
         # Default value or max allowed if less
         value=min(32768, max_tokens_range),
