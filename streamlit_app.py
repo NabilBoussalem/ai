@@ -1,6 +1,37 @@
 import streamlit as st
 from typing import Generator
 from groq import Groq
+import requests
+import os
+
+api_key = os.environ.get("GROQ_API_KEY")
+url = "https://api.groq.com/openai/v1/models"
+
+headers = {
+    "Authorization": f"Bearer {api_key}",
+    "Content-Type": "application/json"
+}
+
+# Make the API request
+response = requests.get(url, headers=headers)
+
+# Extract the JSON response
+models_data = response.json()
+
+# Build the desired dictionary
+models = {}
+for model in models_data:
+    model_id = model["id"]
+    name = model_id  # Default name is the ID
+    tokens = model.get("context_window", 8192)  # Default context window to 8192 if not provided
+    developer = model.get("owned_by", "Unknown")  # Default developer to 'Unknown' if not provided
+
+    # Add to the dictionary
+    models[model_id] = {
+        "name": name,
+        "tokens": tokens,
+        "developer": developer
+    }
 
 # Set page configuration
 st.set_page_config(page_icon="💬", layout="wide", page_title="Groq Goes Brrrrrrrr...")
@@ -28,17 +59,6 @@ if "messages" not in st.session_state:
 if "selected_model" not in st.session_state:
     st.session_state.selected_model = None
 
-# Define model details
-models = {
-    "llama-3.2-90b-vision-preview": {"name": "llama-3.2-90b-vision-preview", "tokens": 8192, "developer": "Google"},
-    "gemma-7b-it": {"name": "Gemma-7b-it", "tokens": 8192, "developer": "Google"},
-    "llama2-70b-4096": {"name": "LLaMA2-70b-chat", "tokens": 4096, "developer": "Meta"},
-    "llama3-70b-8192": {"name": "LLaMA3-70b-8192", "tokens": 100000, "developer": "Meta"},
-    "mixtral-8x7b-32768": {"name": "Mixtral-8x7b-Instruct-v0.1", "tokens": 32768, "developer": "Mistral"},
-    "llama-3.1-70b-versatile": {"name": "llama-3.1-70b-versatile", "tokens": 8000, "developer": "Meta"},
-    "llama3-8b-8192": {"name": "LLaMA3-8b-8192", "tokens": 8192, "developer": "Meta"},
-    "llama-3.1-8b-instant": {"name": "llama-3.1-8b-instant", "tokens": 8000, "developer": "Meta"},
-}
 
 # Layout for model selection and max_tokens slider
 col1, col2, col3 = st.columns(3)
